@@ -8,7 +8,7 @@ module Grape
   # class in order to build an API.
   class API
     class << self
-      attr_reader :route_set
+      attr_reader :route_set, :structure
       
       def logger
         @logger ||= Logger.new($STDOUT)
@@ -185,6 +185,7 @@ module Grape
             )
           end
         end
+        (version || [nil]).each {|v| namespace.each {|n| methods.each {|m| paths.each {|p| ((((@structure ||= {})[v] ||= {})[n] ||= {})[m] ||= []) << p }}}}
       end
       
       def get(*paths, &block); route('GET', paths, &block) end
